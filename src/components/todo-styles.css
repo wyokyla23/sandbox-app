@@ -1,0 +1,25 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* div.todo,
+div.finished {
+  flex: 1;
+  background-color: salmon;
+}
+
+.list-items {
+  width: 90%;
+  list-style-type: none;
+} */
+/* 
+div.clear-button {
+  margin-top: 50px;
+  
+} */
