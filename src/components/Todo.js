@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TodoList() {
   const [todos, setTodos] = useState(customData)
   const [finished, setFinished] = useState([])
+  const [newTodo, setNewTodo] = useState('')
   const classes = useStyles()
   console.log(todos, finished)
   const completeItem = (item) => (event) => {
@@ -92,23 +93,37 @@ export default function TodoList() {
     setTodos([])
   }
 
-  const handleChange = () => (event) => {
-    console.log(event.target.value)
+  const handleChange = (event) => {
+    setNewTodo(event.target.value)
+  }
+
+  const handleSubmit = (value) => (event) => {
+    event.preventDefault()
+    setTodos((prevState) => {
+      return prevState.concat({
+        name: value,
+        id: prevState.length + 1
+      })
+    })
   }
 
   return (
     <Grid container className={classes.todoWrapper}>
       <Grid item className={classes.todoHeader}>
         <h3>What Needs to Get Done?</h3>
-        <form>
+        <form onSubmit={handleSubmit(newTodo)}>
           <Input
             className={classes.input}
+            name='todo'
+            type='text'
             placeholder='Feed the butterflies'
-            autoFocus='true'
-            onChange={handleChange()}
+            value={newTodo}
+            onChange={handleChange}
+            required
           />
           <Button
             variant='outlined'
+            type='submit'
             style={{ marginLeft: '30px' }}
           >
             Add
