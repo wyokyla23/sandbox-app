@@ -76,8 +76,6 @@ export default function TodoList() {
   const [changeCounter, setChangeCounter] = useState(0)
   const classes = useStyles()
 
-  console.log(todos, finished)
-
   useEffect(() => {
     (async () => {
       const response = await Axios({
@@ -94,10 +92,8 @@ export default function TodoList() {
     })()
   }, [changeCounter])
 
-
   const completeItem = (item) => async (event) => {
     const response = await Axios.patch("http://localhost:4000/todos/" + item.task_id, { completed: "true" })
-    console.log(response)
     setTodos(todos.filter((innerItem) => {
       return item.task_id !== innerItem.task_id
     }))
@@ -105,28 +101,27 @@ export default function TodoList() {
     setChangeCounter((prev) => prev + 1)
   }
 
-  const deleteItem = (item) => (event) => {
+  const deleteItem = (item) => async (event) => {
+    const response = await Axios.delete("http://localhost:4000/todos/" + item.task_id)
     setFinished(finished.filter((innerItem) => {
       return item.task_id !== innerItem.task_id
     }))
   }
 
-  const clearItems = () => (event) => {
-    setTodos([])
+  const clearItems = () => async (event) => {
+    const response = await Axios.delete("http://localhost:4000/todos/")
+    setChangeCounter((prev) => prev + 1)
   }
 
   const handleChange = (event) => {
     setNewTodo(event.target.value)
   }
 
-  const handleSubmit = (value) => (event) => {
+  const handleSubmit = (value) => async (event) => {
     event.preventDefault()
-    setTodos((prevState) => {
-      return prevState.concat({
-        name: value,
-        id: prevState.length + 1
-      })
-    })
+    console.log(value)
+    const response = await Axios.post("http://localhost:4000/todos/", { task: value, completed: "false" })
+    setChangeCounter((prev) => prev + 1)
   }
 
   return (
