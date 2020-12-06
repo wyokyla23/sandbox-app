@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./todo-styles.css";
-import { customData } from "./data";
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
 import Button from '@material-ui/core/Button'
+import Axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -69,23 +69,45 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-
 export default function TodoList() {
-  const [todos, setTodos] = useState(customData)
+  const [todos, setTodos] = useState([])
   const [finished, setFinished] = useState([])
   const [newTodo, setNewTodo] = useState('')
+  const [changeCounter, setChangeCounter] = useState(0)
   const classes = useStyles()
+
   console.log(todos, finished)
-  const completeItem = (item) => (event) => {
+
+  useEffect(() => {
+    (async () => {
+      const response = await Axios({
+        method: "GET",
+        url: "http://localhost:4000/todos",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      const incomplete = response.data.filter((task) => task.completed === "false")
+      const completed = response.data.filter((task) => task.completed === "true")
+      setTodos(incomplete)
+      setFinished(completed)
+    })()
+  }, [changeCounter])
+
+
+  const completeItem = (item) => async (event) => {
+    const response = await Axios.patch("http://localhost:4000/todos/" + item.task_id, { completed: "true" })
+    console.log(response)
     setTodos(todos.filter((innerItem) => {
-      return item.id !== innerItem.id
+      return item.task_id !== innerItem.task_id
     }))
     setFinished(finished.concat(item))
+    setChangeCounter((prev) => prev + 1)
   }
 
   const deleteItem = (item) => (event) => {
     setFinished(finished.filter((innerItem) => {
-      return item.id !== innerItem.id
+      return item.task_id !== innerItem.task_id
     }))
   }
 
@@ -137,9 +159,9 @@ export default function TodoList() {
         <div className={classes.finished}>
           <h2>To Do</h2>
           {todos.map((item) => (
-            <div key={item.id}>
+            <div key={item.task_id}>
               <ul className={classes.listItems}>
-                <li>{item.name}</li>
+                <li>{item.task}</li>
                 <Button onClick={completeItem(item)}
                   className={classes.button}>Complete</Button>
               </ul>
@@ -153,9 +175,9 @@ export default function TodoList() {
         <div className={classes.finished}>
           <h2>Finished</h2>
           {finished.map((item) => (
-            <ul key={item.id}
+            <ul key={item.task_id}
               className={classes.listItems}>
-              <li>{item.name}</li>
+              <li>{item.task}</li>
               <Button onClick={deleteItem(item)}
                 className={classes.button}>x</Button>
             </ul>

@@ -1,38 +1,22 @@
-// import faker from "faker";
+// import Axios from 'axios'
 
-// export const fakerData = new Array(20).fill().map(() => {
-//   return {
-//     id: faker.random.uuid(),
-//     name: `${faker.name.firstName()} ${faker.name.lastName()}`
-//   };
-// });
 
-export const customData = [
-  {
-    name: 'Wash the dishes',
-    id: 1,
-  },
-  {
-    name: 'Take out the trash',
-    id: 2,
+// Axios({
+//   method: "GET",
+//   url: "http://localhost:4000/todos",
+//   headers: {
+//     "Content-Type": "application/json"
+//   }
+// }).then(res => {
+//   const todoData = res.data
+//   console.log(todoData)
+// })
 
-  },
-  {
-    name: 'Do the laundry',
-    id: 3,
 
-  },
-  {
-    name: 'Brush teeth',
-    id: 4,
 
-  },
-  {
-    name: 'Take a shower',
-    id: 5,
-  },
-  {
-    name: 'Do a barrel roll',
-    id: 6,
-  }
-]
+
+
+
+
+
+export const customData = []
