@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, SyntheticEvent, useEffect, useState } from "react";
 import "./todo-styles.css";
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
 import Button from '@material-ui/core/Button'
 import Axios from 'axios'
+import { HTMLEvent } from "../types";
 
 const useStyles = makeStyles((theme) => ({
+
   root: {},
   todoWrapper: {
     display: 'flex',
@@ -78,12 +80,19 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default function TodoList() {
-  const [todos, setTodos] = useState([])
-  const [finished, setFinished] = useState([])
+type Task = {
+  task: string
+  task_id: number
+  completed: string
+}
+
+export default function Todo() {
+  const [todos, setTodos] = useState<Task[]>([])
+  const [finished, setFinished] = useState<Task[]>([])
   const [newTodo, setNewTodo] = useState('')
   const [changeCounter, setChangeCounter] = useState(0)
   const classes = useStyles()
+
 
   useEffect(() => {
     (async () => {
@@ -94,14 +103,14 @@ export default function TodoList() {
           "Content-Type": "application/json"
         }
       })
-      const incomplete = response.data.filter((task) => task.completed === "false")
-      const completed = response.data.filter((task) => task.completed === "true")
+      const incomplete = response.data.filter((task: Task) => task.completed === "false")
+      const completed = response.data.filter((task: Task) => task.completed === "true")
       setTodos(incomplete)
       setFinished(completed)
     })()
   }, [changeCounter])
 
-  const completeItem = (item) => async (event) => {
+  const completeItem = (item: Task) => async () => {
     const response = await Axios.patch("http://localhost:4000/todos/" + item.task_id, { completed: "true" })
     setTodos(todos.filter((innerItem) => {
       return item.task_id !== innerItem.task_id
@@ -110,23 +119,23 @@ export default function TodoList() {
     setChangeCounter((prev) => prev + 1)
   }
 
-  const deleteItem = (item) => async (event) => {
+  const deleteItem = (item: Task) => async () => {
     const response = await Axios.delete("http://localhost:4000/todos/" + item.task_id)
     setFinished(finished.filter((innerItem) => {
       return item.task_id !== innerItem.task_id
     }))
   }
 
-  const clearItems = () => async (event) => {
+  const clearItems = () => async () => {
     const response = await Axios.delete("http://localhost:4000/todos/")
     setChangeCounter((prev) => prev + 1)
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: HTMLEvent) => {
     setNewTodo(event.target.value)
   }
 
-  const handleSubmit = (value) => async (event) => {
+  const handleSubmit = (value: string) => async (event: FormEvent) => {
     event.preventDefault()
     console.log(value)
     setNewTodo('')

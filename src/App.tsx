@@ -3,7 +3,7 @@ import Todo from './components/Todo'
 
 export const derp = 'hello'
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <h1>Sandbox Todo App</h1>
