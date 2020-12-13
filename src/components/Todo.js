@@ -65,8 +65,17 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     color: '#232323',
-    backgroundColor: '#aaaaaa'
+    backgroundColor: '#aaaaaa',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+  },
+  completeButton: {
+    '&:hover': {
+      textDecoration: 'line-through'
+    }
   }
+
 }))
 
 export default function TodoList() {
@@ -120,7 +129,8 @@ export default function TodoList() {
   const handleSubmit = (value) => async (event) => {
     event.preventDefault()
     console.log(value)
-    const response = await Axios.post("http://localhost:4000/todos/", { task: value, completed: "false" })
+    setNewTodo('')
+    await Axios.post("http://localhost:4000/todos/", { task: value, completed: "false" })
     setChangeCounter((prev) => prev + 1)
   }
 
@@ -158,7 +168,7 @@ export default function TodoList() {
               <ul className={classes.listItems}>
                 <li>{item.task}</li>
                 <Button onClick={completeItem(item)}
-                  className={classes.button}>Complete</Button>
+                  className={`${classes.button} ${classes.completeButton}`}>Complete</Button>
               </ul>
             </div>
           ))}
