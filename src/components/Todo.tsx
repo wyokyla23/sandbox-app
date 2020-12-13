@@ -86,7 +86,7 @@ type Task = {
   completed: string
 }
 
-export default function TodoList() {
+export default function Todo() {
   const [todos, setTodos] = useState<Task[]>([])
   const [finished, setFinished] = useState<Task[]>([])
   const [newTodo, setNewTodo] = useState('')
