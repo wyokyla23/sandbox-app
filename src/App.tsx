@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Todo from './components/Todo'
 
 export const derp = 'hello'
 
-function App() {
+const App: FC = () => {
   return (
     <div className="App">
       <h1>Sandbox Todo App</h1>
